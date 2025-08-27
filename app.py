@@ -1,5 +1,4 @@
 import os
-from slugify import slugify
 from flask import Flask, render_template, session, request
 
 from article import Article
