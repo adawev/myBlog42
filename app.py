@@ -47,6 +47,14 @@ def admin():
         return 'You are already logged in'
     return render_template('login.html')
 
+
+@app.route('/logout')
+def logout():
+    if 'user' in session:
+        del session['user']
+        return 'You are logged out'
+
+
 @app.post('/admin')
 def admin_login():
     username = request.form['username']
