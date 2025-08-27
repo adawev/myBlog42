@@ -1,4 +1,6 @@
 import os
+from slugify import slugify
+from datetime import datetime
 from flask import Flask, render_template, session, request, make_response, redirect
 import hashlib
 from article import Article
@@ -47,10 +49,28 @@ def logout():
 
 
 @app.route('/publish-post')
-def publish_post():
+def publish_new_post():
     if 'user' in session:
         return render_template('addPost.html')
     return redirect('/admin')
+
+@app.post('/publish-post')
+def publish_post():
+    if 'user' not in session:
+        return redirect('/admin')
+    title = request.form['title']
+    text = request.form['text']
+
+    slug = slugify(title)
+    filename = f"articles/{title}.md"
+
+    md_content = f"# {title}\n\n{text}\n"
+
+    os.makedirs("articles", exist_ok=True)
+    with open(filename, "w") as f:
+        f.write(md_content)
+
+    return redirect('/')
 @app.post('/admin')
 def admin_login():
     username = request.form['username']
