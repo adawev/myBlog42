@@ -1,19 +1,10 @@
 import os
-from flask import Flask, render_template, session, request, make_response
+from flask import Flask, render_template, session, request, make_response, redirect
 import hashlib
 from article import Article
 
 app = Flask(__name__)
 app.secret_key = "verysecretkeywqdqwd"
-
-# @app.route('/set-session')
-# def set_session():
-#     session['user_id'] = 1
-#     return 'session set'
-#
-# @app.route('/get-session')
-# def get_session():
-#     return f'user_id={session.get("user_id")}'
 
 users={
     'admin' : '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824'
@@ -55,6 +46,11 @@ def logout():
         return 'You are logged out'
 
 
+@app.route('/publish-post')
+def publish_post():
+    if 'user' in session:
+        return render_template('addPost.html')
+    return redirect('/admin')
 @app.post('/admin')
 def admin_login():
     username = request.form['username']
