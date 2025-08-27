@@ -4,6 +4,7 @@ import hashlib
 from article import Article
 
 app = Flask(__name__)
+app.secret_key = "verysecretkeywqdqwd"
 
 # @app.route('/set-session')
 # def set_session():
@@ -42,6 +43,8 @@ def article(slug: str):
 
 @app.route('/admin')
 def admin():
+    if 'user' in session:
+        return 'You are already logged in'
     return render_template('login.html')
 
 @app.post('/admin')
@@ -53,6 +56,13 @@ def admin_login():
         return render_template('login.html', error='password/login xato')
 
     hashed = hashlib.sha256(password.encode()).hexdigest()
-    return render_template('login.html', error='hali tayyor emas')
+    print(hashed)
+
+    if users[username] != hashed:
+        return render_template('login.html', error='password/login xato')
+    session['user'] = username
+    return 'you are now authenticated'
+
+
 if __name__ == '__main__':
     app.run(port=4200, debug=True)
