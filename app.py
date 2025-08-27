@@ -1,11 +1,19 @@
 import os
 from slugify import slugify
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, session, request
 
 from article import Article
 
 app = Flask(__name__)
 
+@app.route('/set-session')
+def set_session():
+    session['user_id'] = 1
+    return 'session set'
+
+@app.route('/get-session')
+def get_session():
+    return f'user_id={session.get("user_id")}'
 
 @app.route('/')
 def blog():
